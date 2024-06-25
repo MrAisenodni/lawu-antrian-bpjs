@@ -642,19 +642,19 @@ class AntreanController extends Controller
             return AppHelper::response_json(null,201, 'Gagal. Antrean Tidak Ditemukan');
         }
         
-        $idrs = "23476";
-        $secretKey = "5eN97393F7";
         date_default_timezone_set('Asia/Jakarta');
-        $tStamp = strval(time()-strtotime('1970-01-01 00:00:00'));
-        $signature = hash_hmac('sha256', $idrs."&".$tStamp, $secretKey, true);
-        $encodedSignature = base64_encode($signature);
-        
-        $x_cons_id = $idrs;
-        $x_timestamp = $tStamp;
-        $x_sigature = $encodedSignature;
-        $user_key = "4b7978f0719ad34ab885b3fe002973ee";
+        $idrs               = env('BPJS_CONS_ID');
+        $secretKey          = env('BPJS_CONS_SECRET');
+        $tStamp             = strval(time()-strtotime('1970-01-01 00:00:00'));
+        $signature          = hash_hmac('sha256', $idrs."&".$tStamp, $secretKey, true);
+        $encodedSignature   = base64_encode($signature);
 
-        $check_in_url = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/antrean/updatewaktu';
+        // Pengaturan Parameter API BPJS
+        $x_cons_id          = $idrs;
+        $x_timestamp        = $tStamp;
+        $x_sigature         = $encodedSignature;
+        $user_key           = env('BPJS_CONS_PWD');
+        $check_in_url       = 'https://apijkn.bpjs-kesehatan.go.id/antreanrs/antrean/updatewaktu';
 
 
         $response_bpjs = Http::withHeaders([
